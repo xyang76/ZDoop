@@ -15,7 +15,6 @@ import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.iit.zdoop.Config;
-import org.iit.zdoop.JobTracker;
 
 public class ZMaster {
 	private ZooKeeper zk;
@@ -34,18 +33,18 @@ public class ZMaster {
 		@Override
 		public void process(WatchedEvent event) {  
 			// Register for Jobs Children change again.
-			try {
-				JobWatcher jw = new JobWatcher(instance);
-				jw.watchZNode();
-				
-				TaskWatcher tw = new TaskWatcher(instance);
-				tw.watchZNode();
-				
-				WorkerWatcher ww = new WorkerWatcher(instance);
-				ww.watchZNode();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
+//			try {
+//				JobWatcher jw = new JobWatcher(instance);
+//				jw.watchZNode();
+//				
+//				TaskWatcher tw = new TaskWatcher(instance);
+//				tw.watchZNode();
+//				
+//				WorkerWatcher ww = new WorkerWatcher(instance);
+//				ww.watchZNode();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}         
             if (event.getType() == null || "".equals(event.getType())) {  
                 return;  
             } 
@@ -71,14 +70,25 @@ public class ZMaster {
 			zk = new ZooKeeper(cfg.getServer(), 10000, new ServerWatcher(this));
 			this.index = 0;
 			this.map = new HashMap<>();
+			this.createNodes();
 			try {
 				zk.create("/Masters/m" + id, id.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 			} catch (NodeExistsException e) {
 				
 			}
-			this.createNodes();
 			
-//			zk.create("/Jobs/h" + id, "hello world".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			JobWatcher jw = new JobWatcher(this);
+			jw.watchZNode();
+			
+			TaskWatcher tw = new TaskWatcher(this);
+			tw.watchZNode();
+			
+			WorkerWatcher ww = new WorkerWatcher(this);
+			ww.watchZNode();
+			
+			while(true) {
+				Thread.sleep(1000);	
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (KeeperException e) {
@@ -90,14 +100,14 @@ public class ZMaster {
 
 	public void createNodes() throws KeeperException, InterruptedException {
 		try {
-			zk.create("/Tasks/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Tasks/Compelete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Jobs/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Jobs/Compelete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			zk.create("/Tasks", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			zk.create("/Masters", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			zk.create("/Workers", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			zk.create("/Jobs", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			zk.create("/Tasks/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			zk.create("/Tasks/Complete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			zk.create("/Jobs/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			zk.create("/Jobs/Complete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} catch (NodeExistsException e) {
 			
 		}

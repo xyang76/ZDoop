@@ -10,7 +10,6 @@ import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.data.Stat;
 import org.iit.zdoop.Config;
-import org.iit.zdoop.JobTracker;
 import org.iit.zdoop.Task;
 import org.iit.zdoop.Util;
 

@@ -6,7 +6,6 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.ZooDefs.Ids;
-import org.iit.zdoop.Config;
 
 public class ZWorker {
 	private ZooKeeper zk;
@@ -15,12 +14,11 @@ public class ZWorker {
 	private String id;
 
 	public static void main(String[] args) {
-		String id = args[1];
-		if(args.length > 1) {
-			id = args[1];
-		} else {
-			id = "1";
-		}
+		String id = "8";
+		if (args.length >= 1) {
+			id = args[0];
+			System.out.println(args[0]);
+		} 
 		new ZWorker().start(id);
 	}
 
@@ -29,10 +27,15 @@ public class ZWorker {
 			server = "";
 			this.id = id;
 			ww = new TaskWatcher(id);
-			ww.setZk(zk);
-			
 			zk = new ZooKeeper(server, 10000, ww);
-			zk.create("/Workers/w" + id, null, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			ww.setZk(zk);
+			zk.create("/Workers/" + id, null, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			
+//			TaskWatcher tw = new TaskWatcher(id, zk);
+//			tw.watchZNode();
+			while(true) {
+				Thread.sleep(1000);	
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (KeeperException e) {
@@ -41,5 +44,4 @@ public class ZWorker {
 			e.printStackTrace();
 		}
 	}
-
 }

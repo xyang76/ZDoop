@@ -38,11 +38,11 @@ public class WorkerWatcher implements Watcher {
 		
         if (event.getType() == null || "".equals(event.getType())) {  
             return;  
-        } 
-        System.out.println("Event Workers " + event.getType() + " has been occured！");  
+        }   
 	}
 	
 	private void doSetWorker(List<String> children) {
+		System.out.println("Workers has been changed with " + children.size() + " workers. \n");
 		ArrayList<String> workers = new ArrayList<String>();
 		for(int i = 0; i < children.size(); i++) {
 			workers.add(children.get(i));

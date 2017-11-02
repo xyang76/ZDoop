@@ -7,12 +7,17 @@ public class Job implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Class<?> mapper;
-	private Class<?> reducer;
+	private String mapper;
+	private String reducer;
+	private byte[] mapperData;
+	private byte[] reducerData;
 	private byte[] data;
 	private int status;
 	private int jobid;
+	private String name; 
 	
+
+
 	public Job() {
 		this.status = 0;			
 	}
@@ -28,6 +33,23 @@ public class Job implements Serializable {
 	public int getStatus() {
 		return status;
 	}
+	
+	public byte[] getMapperData() {
+		return mapperData;
+	}
+
+	public void setMapperData(byte[] mapperData) {
+		this.mapperData = mapperData;
+	}
+
+	public byte[] getReducerData() {
+		return reducerData;
+	}
+
+	public void setReducerData(byte[] reducerData) {
+		this.reducerData = reducerData;
+	}
+
 
 	public void setStatus(int status) {
 		this.status = status;
@@ -40,20 +62,28 @@ public class Job implements Serializable {
 	public void setData(byte[] data) {
 		this.data = data;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
-	public Class<?> getMapper() {
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMapper() {
 		return mapper;
 	}
 
 	public void setMapper(Class<?> mapper) {
-		this.mapper = mapper;
+		this.mapper = mapper.getName();
 	}
 
-	public Class<?> getReducer() {
+	public String getReducer() {
 		return reducer;
 	}
 
 	public void setReducer(Class<?> reducer) {
-		this.reducer = reducer;
+		this.reducer = reducer.getName();
 	}
 }

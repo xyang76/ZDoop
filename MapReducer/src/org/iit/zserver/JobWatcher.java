@@ -15,7 +15,6 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.KeeperException.Code;
 import org.iit.zdoop.Config;
 import org.iit.zdoop.Job;
-import org.iit.zdoop.JobTracker;
 import org.iit.zdoop.Task;
 import org.iit.zdoop.Util;
 import org.iit.zserver.ZMaster.ServerWatcher;
@@ -75,7 +74,7 @@ public class JobWatcher implements Watcher {
 					if (children != null) {
 						for (int i = 0; i < children.size(); i++) {
 							JobTracker tracker = new JobTracker(instance);
-							tracker.doPartition(path);
+							tracker.doPartition(children.get(i));
 						}
 					}
 					break;

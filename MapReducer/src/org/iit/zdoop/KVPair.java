@@ -1,19 +1,27 @@
 package org.iit.zdoop;
 
-public class KVPair {
-	private Object key;
-	private Object value;
+import java.io.Serializable;
+
+public class KVPair implements Serializable {
+	private String key;
+	private int value;
 	
-	public Object getKey() {
-		return key;
-	}
-	public void setKey(Object key) {
+	public KVPair(String key, Integer value) {
 		this.key = key;
-	}
-	public Object getValue() {
-		return value;
-	}
-	public void setValue(Object value) {
 		this.value = value;
 	}
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public int getValue() {
+		return value;
+	}
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
 }

@@ -7,8 +7,10 @@ public class Task implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Class<?> mapper;
-	private Class<?> reducer;
+	private String mapper;
+	private String reducer;
+	private byte[] mapperData;
+	private byte[] reducerData;
 	private byte[] data;
 	private int status;
 	private int taskid;
@@ -34,6 +36,24 @@ public class Task implements Serializable {
 		this.status = 0;			
 	}
 	
+
+	public byte[] getMapperData() {
+		return mapperData;
+	}
+
+	public void setMapperData(byte[] mapperData) {
+		this.mapperData = mapperData;
+	}
+
+	public byte[] getReducerData() {
+		return reducerData;
+	}
+
+	public void setReducerData(byte[] reducerData) {
+		this.reducerData = reducerData;
+	}
+
+	
 	public int getStatus() {
 		return status;
 	}
@@ -50,19 +70,19 @@ public class Task implements Serializable {
 		this.data = data;
 	}
 
-	public Class<?> getMapper() {
+	public String getMapper() {
 		return mapper;
 	}
 
-	public void setMapper(Class<?> mapper) {
+	public void setMapper(String mapper) {
 		this.mapper = mapper;
 	}
 
-	public Class<?> getReducer() {
+	public String getReducer() {
 		return reducer;
 	}
 
-	public void setReducer(Class<?> reducer) {
+	public void setReducer(String reducer) {
 		this.reducer = reducer;
 	}
 }
