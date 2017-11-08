@@ -3,6 +3,10 @@ package org.iit.zdoop;
 import java.io.Serializable;
 
 public class KVPair implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String key;
 	private int value;
 	

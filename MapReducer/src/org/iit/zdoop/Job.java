@@ -2,9 +2,12 @@ package org.iit.zdoop;
 
 import java.io.*;
 
+/*
+ * Job is a serializable class that can store the mapper, reducer and data. 
+ */
 public class Job implements Serializable {
 	/**
-	 * 
+	 * Parameters
 	 */
 	private static final long serialVersionUID = 1L;
 	private String mapper;
@@ -15,8 +18,6 @@ public class Job implements Serializable {
 	private int status;
 	private int jobid;
 	private String name; 
-	
-
 
 	public Job() {
 		this.status = 0;			
@@ -85,5 +86,13 @@ public class Job implements Serializable {
 
 	public void setReducer(Class<?> reducer) {
 		this.reducer = reducer.getName();
+	}
+	
+	public void setMapper(String mapper) {
+		this.mapper = mapper;
+	}
+
+	public void setReducer(String reducer) {
+		this.reducer = reducer;
 	}
 }

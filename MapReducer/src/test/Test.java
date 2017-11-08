@@ -24,20 +24,8 @@ public class Test {
 	}
   
     public static void main(String[] args) {  
-    	Job j = new Job();
-    	String data = "Hello world Hello world\n "
-				+ "hi world hello\n "
-				+ "nice to meet you\n"
-				+ "welcome to chicago";
-    	j.setData(data.getBytes());
-    	j.setMapper(MyMapper.class);
-    	byte[] b = serialize(j);
-    	System.out.println(b.length);
-    	System.out.println(String.valueOf(b));
-    	
-    	Job jj = (Job)deserialize(b);
-    	System.out.println(jj.getClass());
-    	System.out.println(new String(jj.getData()));
+    	String line = "hello=ajoijf";
+    	System.out.println(line.substring(line.indexOf('=') + 1));
     	
     }  
     

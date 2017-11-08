@@ -8,7 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.data.Stat;
 
 public class Util {
 	public static byte[] serialize(Object o) {
@@ -66,5 +71,78 @@ public class Util {
         }  
         return buffer;  
     }
+    
+    public static void zooDelete(ZooKeeper zk, String path) {
+    	try {
+    		zk.delete(path, -1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (KeeperException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public static void zooCreate(ZooKeeper zk, String path, byte[] data, CreateMode mode) {
+    	try {
+			zk.create(path, data, Ids.OPEN_ACL_UNSAFE, mode);
+		} catch (KeeperException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public static void zooCreate(ZooKeeper zk, String path, byte[] data, CreateMode mode, boolean isNotify) {
+    	try {
+			zk.create(path, data, Ids.OPEN_ACL_UNSAFE, mode);
+		} catch (KeeperException e) {
+			if(isNotify) {
+				e.printStackTrace();
+			}
+		} catch (InterruptedException e) {
+			if(isNotify) {
+				e.printStackTrace();
+			}
+		}
+    }
+    
+    public static byte[] zooGetData(ZooKeeper zk, String path) {
+    	Stat stat = new Stat();
+    	try {
+			return zk.getData(path, true, stat);
+		} catch (KeeperException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	return new byte[0];
+    }
+    
+    public static byte[] zooGetAndDelete(ZooKeeper zk, String path) {
+    	Stat stat = new Stat();
+    	byte[] data;
+    	try {
+			data = zk.getData(path, true, stat);
+			zk.delete(path, -1);
+			return data;
+		} catch (KeeperException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	return new byte[0];
+    }
+    
+    public static boolean isMatch(String id, String path) {
+		boolean flag = true;
+		for(int i = 0; i < id.length(); i++) {
+			if(id.charAt(i) != path.charAt(i)) {
+				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+    
     
 }

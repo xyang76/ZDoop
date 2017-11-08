@@ -10,20 +10,25 @@ public class Client {
 
 		// Simulate read configuration file.
 		Config cfg = new Config();
-		String data = "Hello world Hello world\n " + "hi world hello\n " + "nice to meet you\n" + "welcome to chicago";
+		String data = "Hello world hello world\n " + "hi world hello you\n " + "nice to meet you\n"
+				+ "Hello welcome to chicago";
 
-		hadoop.start(cfg);
+		hadoop.start(cfg, args);
 
 		// Start a job with mapper and reducer, also, we need specify the
 		// input(data) and output(result)
-		Job job = new Job();
-		job.setMapper(MyMapper.class);
-		job.setReducer(MyReducer.class);
-
-		job.setData(data.getBytes());
-
-		// Start hadoop
-		hadoop.execute(job);
+		if(!hadoop.isCmdMode()) {
+			Job job = new Job();
+			job.setMapper(MyMapper.class);
+			job.setReducer(MyReducer.class);
+	
+			job.setData(data.getBytes());
+	
+			// Start hadoop
+			hadoop.execute(job);
+		} else {
+			hadoop.startcmd();
+		}
 	}
 
 }

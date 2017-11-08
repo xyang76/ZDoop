@@ -2,25 +2,22 @@ package org.iit.zserver;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.KeeperException.Code;
-import org.apache.zookeeper.KeeperException.NodeExistsException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.ZooDefs.Ids;
 import org.iit.zdoop.Config;
+import org.iit.zdoop.Util;
 
 public class ZMaster {
 	private ZooKeeper zk;
 	private Config cfg;
-	private ServerWatcher sw;
 	private int index;
+	private boolean debug;
+	private boolean print;
+	private String id;
 	private HashMap<Integer, JobTracker> map;
 	
 	class ServerWatcher implements Watcher {
@@ -32,50 +29,45 @@ public class ZMaster {
 		
 		@Override
 		public void process(WatchedEvent event) {  
-			// Register for Jobs Children change again.
-//			try {
-//				JobWatcher jw = new JobWatcher(instance);
-//				jw.watchZNode();
-//				
-//				TaskWatcher tw = new TaskWatcher(instance);
-//				tw.watchZNode();
-//				
-//				WorkerWatcher ww = new WorkerWatcher(instance);
-//				ww.watchZNode();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}         
-            if (event.getType() == null || "".equals(event.getType())) {  
-                return;  
-            } 
-            EventType tp = event.getType();
-            System.out.println("Event " + event.getType() + " has been occured！");  
+			if(instance.isDebug()) {
+				System.out.println("Event " + event.getType() + " has been occured！");  
+			}
         } 
+	}
+	
+	public void setParameter(String[] args) {
+		id = "w1";
+		if (args.length >= 1) {
+			id = args[0];
+			System.out.println(args[0]);
+			if(args.length >= 2) {
+				for(int i = 1; i < args.length; i++) {
+					if("-debug".equals(args[i])) {
+						debug = true;
+					}
+					if("-print".equals(args[i])) {
+						print = true;
+						debug = true;
+					}
+				}
+			}
+		} 
 	}
 
 	public static void main(String[] args) {
-		String id;
-		if(args.length > 1) {
-			id = args[1];
-		} else {
-			id = "1";
-		}
-		new ZMaster().start(id);
+		new ZMaster().start(args);
 	}
 
-	public void start(String id) {
+	public void start(String[] args) {
 		try {
+			setParameter(args);
 			cfg = new Config();
 			cfg.setServer("127.0.0.1:2181");
 			zk = new ZooKeeper(cfg.getServer(), 10000, new ServerWatcher(this));
 			this.index = 0;
 			this.map = new HashMap<>();
 			this.createNodes();
-			try {
-				zk.create("/Masters/m" + id, id.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-			} catch (NodeExistsException e) {
-				
-			}
+			Util.zooCreate(zk, "/Masters/m" + id, id.getBytes(), CreateMode.EPHEMERAL);
 			
 			JobWatcher jw = new JobWatcher(this);
 			jw.watchZNode();
@@ -99,18 +91,14 @@ public class ZMaster {
 	}
 
 	public void createNodes() throws KeeperException, InterruptedException {
-		try {
-			zk.create("/Tasks", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Masters", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Workers", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Jobs", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Tasks/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Tasks/Complete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Jobs/New", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			zk.create("/Jobs/Complete", null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		} catch (NodeExistsException e) {
-			
-		}
+		Util.zooCreate(zk, "/Tasks", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Masters", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Workers", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Jobs", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Tasks/New", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Tasks/Complete", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Jobs/New", null, CreateMode.PERSISTENT, false);
+		Util.zooCreate(zk, "/Jobs/Complete", null, CreateMode.PERSISTENT, false);
 	}
 	
 	public ZooKeeper getZk() {
@@ -143,5 +131,21 @@ public class ZMaster {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public boolean isPrint() {
+		return print;
+	}
+
+	public void setPrint(boolean print) {
+		this.print = print;
 	}
 }

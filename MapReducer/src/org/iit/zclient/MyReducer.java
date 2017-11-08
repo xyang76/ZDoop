@@ -6,6 +6,7 @@ import org.iit.zdoop.Reducer;
 public class MyReducer extends Reducer {
 
 	@Override
+	//                 A            [1, 2]           [3] 
 	public void reduce(Object key, Integer[] values, Context context) {
 		int sum = 0;
 		for (int val : values) {

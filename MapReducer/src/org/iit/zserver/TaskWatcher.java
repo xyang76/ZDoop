@@ -9,20 +9,17 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.data.Stat;
-import org.iit.zdoop.Config;
 import org.iit.zdoop.Task;
 import org.iit.zdoop.Util;
 
 public class TaskWatcher implements Watcher {
 
 	private ZooKeeper zk;
-	private Config cfg;
 	private ZMaster instance;
 
 	public TaskWatcher(ZMaster instance) {
 		this.instance = instance;
 		this.zk = instance.getZk();
-		this.cfg = instance.getCfg();
 	}
 
 	public void watchZNode() {
@@ -38,10 +35,9 @@ public class TaskWatcher implements Watcher {
 	public void process(WatchedEvent event) {
 		this.watchZNode();
 
-		if (event.getType() == null || "".equals(event.getType())) {
-			return;
+		if(instance.isDebug()) {
+			System.out.println("Event Tasks " + event.getType() + " has been occured！");
 		}
-		System.out.println("Event Tasks " + event.getType() + " has been occured！");
 	}
 
 	private void doTaskComplete(String path) {

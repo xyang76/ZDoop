@@ -9,7 +9,6 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.KeeperException.Code;
 import org.iit.zdoop.Config;
-import org.iit.zserver.ZMaster.ServerWatcher;
 
 public class WorkerWatcher implements Watcher {
 	
@@ -36,8 +35,8 @@ public class WorkerWatcher implements Watcher {
 	public void process(WatchedEvent event) {
 		this.watchZNode();
 		
-        if (event.getType() == null || "".equals(event.getType())) {  
-            return;  
+        if(instance.isDebug()) {
+        	System.out.println("Event Tasks " + event.getType() + " has been occured！");
         }   
 	}
 	
@@ -68,10 +67,6 @@ public class WorkerWatcher implements Watcher {
 				}
 			}
 		};
-	}
-	
-	public void doPartition() {
-		
 	}
 	
 	public ZooKeeper getZk() {
