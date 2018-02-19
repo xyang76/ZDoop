@@ -3,29 +3,27 @@
 # test the hadoop cluster by running wordcount
 
 # create input files 
-mkdir input
+mkdir temp
 
-echo "Hello Docker" >input/file2.txt
-echo "Hello Hadoop" >input/file1.txt
-cp WordCount.jar input/WordCount.jar
+cp 1mb.txt tmp/1mb.txt
 
 # create input directory on HDFS
-hadoop fs -mkdir -p input
+hadoop fs -mkdir -p temp
 
 # put input files to HDFS
-hdfs dfs -put ./input/* input
+hdfs dfs -put ./temp/* temp
 
 # run wordcount 
-hadoop jar input/WordCount.jar test.WordCount input output
+hadoop jar WordCount.jar test.WordCount temp outtemp
 
 # print the input files
-echo -e "\ninput file1.txt:"
-hdfs dfs -cat input/file1.txt
+# echo -e "\ninput file1.txt:"
+# hdfs dfs -cat input/file1.txt
 
-echo -e "\ninput file2.txt:"
-hdfs dfs -cat input/file2.txt
+# echo -e "\ninput file2.txt:"
+# hdfs dfs -cat input/file2.txt
 
 # print the output of wordcount
-echo -e "\nwordcount output:"
-hdfs dfs -cat output/part-r-00000
+# echo -e "\nwordcount output:"
+# hdfs dfs -cat output/part-r-00000
 
