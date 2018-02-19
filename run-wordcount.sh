@@ -5,7 +5,7 @@
 # create input files 
 mkdir temp
 
-cp 1mb.txt tmp/1mb.txt
+cp 1mb.txt temp/1mb.txt
 
 # create input directory on HDFS
 hadoop fs -mkdir -p temp
