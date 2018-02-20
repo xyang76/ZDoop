@@ -5,7 +5,7 @@
 # create input files 
 mkdir temp
 
-cp 1mb.txt temp/1mb.txt 
+cp 1mb.txt temp/1mb.txt
 
 # create input directory on HDFS
 hadoop fs -mkdir -p temp
@@ -14,7 +14,7 @@ hadoop fs -mkdir -p temp
 hdfs dfs -put ./temp/* temp
 
 # run wordcount 
-hadoop jar WordCount.jar test.WordCount temp tempout
+hadoop jar WordCount.jar test.WordCount temp outtemp
 
 # print the input files
 # echo -e "\ninput file1.txt:"
@@ -26,3 +26,4 @@ hadoop jar WordCount.jar test.WordCount temp tempout
 # print the output of wordcount
 # echo -e "\nwordcount output:"
 # hdfs dfs -cat output/part-r-00000
+
