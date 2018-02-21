@@ -3,18 +3,18 @@
 # test the hadoop cluster by running wordcount
 
 # create input files 
-mkdir temp
+# mkdir temp
 
-cp 1mb.txt temp/1mb.txt
+# cp 1mb.txt temp/1mb.txt
 
 # create input directory on HDFS
-hadoop fs -mkdir -p temp
+# hadoop fs -mkdir -p temp
 
 # put input files to HDFS
-hdfs dfs -put ./temp/* temp
+# hdfs dfs -put ./temp/* temp
 
 # run wordcount 
-hadoop jar WordCount.jar test.WordCount temp outtemp
+hadoop jar WordCount.jar test.WordCount temp outtemp2
 
 # print the input files
 # echo -e "\ninput file1.txt:"
